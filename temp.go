@@ -9,5 +9,6 @@ func Names() (first string, second string) {
 }
 
 func main() {
-	fmt.Print("123")
+	x := 11
+	fmt.Print("123", x)
 }
