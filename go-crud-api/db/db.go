@@ -19,6 +19,8 @@ type Movie struct {
 	ID          string `json:"id" gorm:"primarykey"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
+	Director    string `json:"director"`     // новое поле
+	ReleaseYear int    `json:"release_year"` // новое поле
 }
 
 func InitPostgresDB() {
