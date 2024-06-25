@@ -7,8 +7,22 @@ func main() {
 	workDays := make([]string, 5, 5)
 	copy(workDays, days)
 
-	holydays := days[5:7]
-	days = holydays
+	var otherDay []string
+	for _, day := range days {
+		if !contains(workDays, day) {
+			otherDay = append(otherDay, day)
+		}
+	}
+	fmt.Println(days)
+	fmt.Println(workDays)
+	fmt.Println(otherDay)
+}
 
-	fmt.Println(workDays, days)
+func contains(slice []string, item string) bool {
+	for _, v := range slice {
+		if v == item {
+			return true
+		}
+	}
+	return false
 }
