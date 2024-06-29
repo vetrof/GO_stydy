@@ -2,8 +2,13 @@ package wordz
 
 import (
 	"crypto/rand"
+	"fmt"
 	"math/big"
 )
+
+func init() {
+	fmt.Println("Func Init -->>")
+}
 
 var Hello = "This is wordz package"
 var Prefix = "Random word: "
