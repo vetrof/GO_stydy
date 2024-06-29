@@ -14,8 +14,23 @@ func main() {
 		Discount: true,
 	}
 
+	partner := internal.Partner{
+		Age:     44,
+		Balance: 10000,
+		Debt:    1000,
+		Name:    "vetrof",
+	}
+
+	startTransaction(&partner)
+	startTransaction(&cust)
+	fmt.Println(partner)
+
 	fmt.Println(cust.WrOffDebt())
 	fmt.Println(cust.CalcDiscount())
 	fmt.Printf("%+v\n", cust)
 
+}
+
+func startTransaction(debtor internal.Debtor) error {
+	return debtor.WrOffDebt()
 }
