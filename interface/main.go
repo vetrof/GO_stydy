@@ -7,6 +7,11 @@ import (
 	"strconv"
 )
 
+type Office interface {
+	PrintEmployersInfo()
+	Hash() string
+}
+
 type Employers struct {
 	Name string
 	Id   int
