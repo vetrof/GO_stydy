@@ -9,6 +9,7 @@ import (
 	"gomap/internal/timeutil"
 	"log"
 	"net/http"
+	"strings"
 )
 
 func RootHandler(w http.ResponseWriter, r *http.Request) {
@@ -16,32 +17,8 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func SetGpsHandler(w http.ResponseWriter, r *http.Request) {
-	var coords gps_utils.GpsCoordinates
-
-	if err := gps_utils.ParseRequestBody(r, &coords); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	// Создание новой записи для сохранения координат
-	userPlace := db.UserPlace{
-		//ID:   generateID(), // Функция для генерации уникального ID
-		N:    coords.N,
-		E:    coords.E,
-		Info: "some info", // Замените это необходимой информацией
-	}
-
-	if _, err := db.CreateUserPlace(&userPlace); err != nil {
-		http.Error(w, "Failed to save coordinates", http.StatusInternalServerError)
-		return
-	}
-
-	fmt.Fprintf(w, "SetGpsHandler N: %s, E: %s", coords.N, coords.E)
-}
-
-func CreatePlaceGpsHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
-	var coordinate gps_utils.CoordinateRequest
+	var coordinate gps_utils.GpsCoordinates
 	err := decoder.Decode(&coordinate)
 	if err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
@@ -51,15 +28,15 @@ func CreatePlaceGpsHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(coordinate)
 
 	// Создаем объект места для сохранения в базу данных
-	place := &db.Place{
-		Name: coordinate.Name,
+	place := &db.UserPlace{
+		Info: "name",
 		Geom: "POINT(" + coordinate.Lng + " " + coordinate.Lat + ")",
 	}
 
 	fmt.Println(place)
 
 	// Вызываем функцию создания места в базе данных
-	_, err = db.CreatePlace(place)
+	_, err = db.CreateUserPlace(place)
 	if err != nil {
 		log.Println("Error creating place:", err)
 		http.Error(w, "Failed to save place", http.StatusInternalServerError)
@@ -70,6 +47,45 @@ func CreatePlaceGpsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Place saved successfully"))
 }
 
+func NewPlaceHandler(response http.ResponseWriter, request *http.Request) {
+	decoder := json.NewDecoder(request.Body)
+	var newPlaceReq gps_utils.NewPlace
+	err := decoder.Decode(&newPlaceReq)
+	if err != nil {
+		http.Error(response, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	// Split point into lat and lng
+	coords := strings.Split(newPlaceReq.Point, ",")
+	if len(coords) != 2 {
+		http.Error(response, "Invalid coordinates format", http.StatusBadRequest)
+		return
+	}
+	lat := strings.TrimSpace(coords[0])
+	lng := strings.TrimSpace(coords[1])
+
+	fmt.Println("-->>", lat)
+	fmt.Println("-->>", lng)
+
+	// Create a new Place object
+	place := &db.Place{
+		Name: newPlaceReq.Name,
+		Geom: "POINT(" + lng + " " + lat + ")",
+		Desc: newPlaceReq.Desc,
+	}
+
+	// Call function to create the place in the database
+	_, err = db.CreatePlace(place)
+	if err != nil {
+		log.Println("Error creating place:", err)
+		http.Error(response, "Failed to save place", http.StatusInternalServerError)
+		return
+	}
+
+	response.Write([]byte("Place saved successfully"))
+}
+
 func CurrentMapHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, World!")
 }
@@ -78,8 +94,23 @@ func ListMyGpsMapHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "CurrentMapHandler")
 }
 
-func NearPlaceHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "NearPlaceHandler")
+func NearPlaceHandler(response http.ResponseWriter, request *http.Request) {
+	decoder := json.NewDecoder(request.Body)
+	var coordinate gps_utils.GpsCoordinates
+	err := decoder.Decode(&coordinate)
+	if err != nil {
+		http.Error(response, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	places, err := db.GetNearPlaces(coordinate)
+	if err != nil {
+		http.Error(response, "Error getting near places", http.StatusInternalServerError)
+		return
+	}
+
+	response.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(response).Encode(places)
 }
 
 func PlaceDetailHandler(w http.ResponseWriter, r *http.Request) {

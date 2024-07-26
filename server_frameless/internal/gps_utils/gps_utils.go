@@ -6,8 +6,8 @@ import (
 )
 
 type GpsCoordinates struct {
-	N string `json:"n"`
-	E string `json:"e"`
+	Lat string `json:"lat"`
+	Lng string `json:"lng"`
 }
 
 // ParseRequestBody
@@ -17,8 +17,8 @@ func ParseRequestBody(r *http.Request, v interface{}) error {
 	return decoder.Decode(v)
 }
 
-type CoordinateRequest struct {
-	Name string `json:"name"`
-	Lat  string `json:"lat"`
-	Lng  string `json:"lng"`
+type NewPlace struct {
+	Point string `json:"point"`
+	Name  string `json:"name"`
+	Desc  string `json:"desc"`
 }

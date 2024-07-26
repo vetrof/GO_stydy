@@ -1,25 +1,18 @@
 package main
 
 import (
+	"gormex/db"
+	"gormex/router"
 	"log"
 	"net/http"
 	"os"
-
-	"gomap/internal/bot"
-	"gomap/internal/db"
-	"gomap/internal/router"
 )
 
 func main() {
-
-	// db init
-	db.InitPostgresDB()
-
-	// Bot init
-	bot.Bot()
+	db.InitPostgres()
 
 	// Server init
-	r := router.NewRouter()
+	r := router.Router()
 
 	port := os.Getenv("PORT")
 	if port == "" {
