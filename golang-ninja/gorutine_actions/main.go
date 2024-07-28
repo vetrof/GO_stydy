@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"os"
 	"time"
 )
 
@@ -24,7 +26,7 @@ type User struct {
 	logs  []LogItem
 }
 
-func (u User) getActivity() string {
+func (u User) getActivityInfo() string {
 	out := fmt.Sprintf("id %d   email %s \nActivity log: \n", u.id, u.email)
 	for i, item := range u.logs {
 		out += fmt.Sprintf("%d) %s  %s \n", i+1, item.action, item.timeStamp)
@@ -33,18 +35,15 @@ func (u User) getActivity() string {
 }
 
 func main() {
-	u := User{
-		id:    1,
-		email: "qwer@t.y",
-		logs: []LogItem{
-			{actions[0], time.Now()},
-			{actions[1], time.Now()},
-			{actions[2], time.Now()},
-			{actions[3], time.Now()},
-			{actions[4], time.Now()},
-		},
+	rand.Seed(time.Now().Unix())
+
+	users := generateUsers(1000)
+	for _, user := range users {
+		err := safeUserInfo(user)
+		if err != nil {
+			return
+		}
 	}
-	fmt.Println(u.getActivity())
 }
 
 func generateUsers(count int) []User {
@@ -54,7 +53,7 @@ func generateUsers(count int) []User {
 		users[i] = User{
 			id:    i + 1,
 			email: fmt.Sprintf("user%d@t.y", i+1),
-			logs:  generateLogs(),
+			logs:  generateLogs(rand.Intn(1000)),
 		}
 	}
 	return users
@@ -64,5 +63,25 @@ func generateLogs(count int) []LogItem {
 	logs := make([]LogItem, count)
 
 	for i := 0; i < count; i++ {
+		logs[i] = LogItem{
+			timeStamp: time.Now(),
+			action:    actions[rand.Intn(len(actions)-1)],
+		}
 	}
+	return logs
+}
+
+func safeUserInfo(user User) error {
+	fmt.Println("Write info TO FILE user:%d", user.id)
+	filename := fmt.Sprintf("logs/uuid_%d.txt", user.id)
+	file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0644)
+	if err != nil {
+		return err
+	}
+	_, err = file.WriteString(user.getActivityInfo())
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	return nil
 }

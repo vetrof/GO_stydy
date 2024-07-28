@@ -3,3 +3,4 @@
 .idea/vcs.xml
 url-shortener_my/.env
 url-shortener_my/.DS_Store
+/golang-ninja/gorutine_actions/logs
