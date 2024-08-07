@@ -36,13 +36,3 @@ require (
 	github.com/theplant/cldr v0.0.0-20190423050709-9f76f7ce4ee8 // indirect
 	golang.org/x/net v0.27.0 // indirect
 )
-
-
-+77081763039
-testgalmart
-
-https://wa.me/+77716290030
-
-
-docker build -t vetrof/redirect2 .
-docker push vetrof/redirect2
