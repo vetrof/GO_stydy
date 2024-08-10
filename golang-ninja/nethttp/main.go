@@ -17,7 +17,7 @@ type LoggingRoundTripper struct {
 }
 
 func (l LoggingRoundTripper) RoundTrip(r *http.Request) (*http.Response, error) {
-	fmt.Fprintf(l.logger, "[%s] %s %s\n", time.Now().Format(time.ANSIC), r.Method, r.URL)
+	fmt.Fprintf(l.logger, ">>> LOGGER: [%s] %s %s\n", time.Now().Format(time.ANSIC), r.Method, r.URL)
 	return l.next.RoundTrip(r)
 }
 
@@ -40,7 +40,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf(">>>>>>>>>>>>>>> STATUS %d <<<<<<<<<<<<<<<<", resp.StatusCode)
+	//fmt.Printf(">>>>>>>>>>>>>>> STATUS %d <<<<<<<<<<<<<<<<", resp.StatusCode)
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
