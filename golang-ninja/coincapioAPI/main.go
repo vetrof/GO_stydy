@@ -12,6 +12,8 @@ import (
 
 const sampleUrl = "http://api.coincap.io/v2/assets"
 
+//const sampleUrl = "http://api.coincap.io/v2/assets/bitcoin"
+
 type assetData struct {
 	ID                string `json:"id"`
 	Rank              string `json:"rank"`
@@ -26,18 +28,23 @@ type assetData struct {
 	Vwap24Hr          string `json:"vwap24Hr"`
 }
 
+func (d assetData) Info() string {
+	return fmt.Sprintf("[ID]: %s | [Rank]: %s | [Name]: %s", d.ID, d.Rank, d.Name)
+}
+
 type assetsResponse struct {
 	Data      []assetData `json:"data"`
 	Timestamp int64       `json:"timestamp"`
 }
 
+type assetResponse struct {
+	Data      assetData `json:"data"`
+	Timestamp int64     `json:"timestamp"`
+}
+
 type LoggingRoundTripper struct {
 	logger io.Writer
 	next   http.RoundTripper
-}
-
-func (d assetData) Info() string {
-	return fmt.Sprintf("[ID]: %s | [Rank]: %s | [Name]: %s", d.ID, d.Rank, d.Name)
 }
 
 func (l LoggingRoundTripper) RoundTrip(r *http.Request) (*http.Response, error) {
@@ -76,6 +83,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	//fmt.Println(r.Data)
 
 	for _, asset := range r.Data {
 		fmt.Println(asset.Info())
