@@ -1,7 +1,6 @@
 package main
 
 import (
-	"apikafka/kafka"
 	"apikafka/router"
 	"net/http"
 )
@@ -9,10 +8,10 @@ import (
 func main() {
 
 	// Пример отправки сообщения в Kafka
-	go kafka.ProduceMessage("my-topic", "Привет, Kafka!")
+	//go kafka.ProduceMessage("my-topic", "Привет, Kafka!")
 
 	// Пример получения сообщений из Kafka
-	go kafka.ConsumeMessages("my-topic")
+	//go kafka.ConsumeMessages("my-topic")
 
 	// Создаем маршрутизатор и связываем маршруты с хендлерами
 	router := router.SetupRouter()
