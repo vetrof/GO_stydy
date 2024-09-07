@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 )
@@ -30,7 +31,7 @@ func handleUsers(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		getUsers(w, r)
 	case http.MethodPost:
-		getUsers(w, r)
+		addUser(w, r)
 	default:
 		w.WriteHeader(http.StatusNotImplemented)
 	}
@@ -45,5 +46,15 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func addUser(w http.ResponseWriter, r *http.Request) {
-	//todo
+	reqBytes, err := io.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	var user User
+	if err = json.Unmarshal(reqBytes, &user); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	users = append(users, user)
 }
