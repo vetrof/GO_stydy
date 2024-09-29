@@ -23,7 +23,8 @@ type HTTPServer struct {
 }
 
 func MustLoad() *Config {
-	configPath := os.Getenv("CONFIG_PATH")
+	//configPath := os.Getenv("CONFIG_PATH")
+	configPath := "/Users/vetrof/Documents/CODE/GO/go_study/url-shortener/config/local.yml"
 	if configPath == "" {
 		log.Fatal("CONFIG_PATH is not set")
 	}
