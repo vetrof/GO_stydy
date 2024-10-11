@@ -15,6 +15,12 @@ import (
 )
 
 func main() {
+
+	massivInts := []int{1, 2, 3, 4, 5}
+	fmt.Println(massivInts)
+	reverse(massivInts[:])
+	fmt.Println(massivInts)
+
 	//!+array
 	a := [...]int{0, 1, 2, 3, 4, 5}
 	reverse(a[:])
@@ -47,6 +53,7 @@ outer:
 		fmt.Printf("%v\n", ints)
 	}
 	// NOTE: ignoring potential errors from input.Err()
+
 }
 
 // !+rev
