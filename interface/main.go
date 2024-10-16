@@ -1,41 +1,26 @@
 package main
 
-import (
-	"crypto/sha256"
-	"encoding/hex"
-	"fmt"
-	"strconv"
-)
+import "fmt"
 
-type Office interface {
-	PrintEmployersInfo()
-	Hash() string
+type animal interface {
+	MakeSound()
 }
 
-type Employers struct {
-	Name string
-	Id   int
+type cat struct{}
+type dog struct{}
+
+func (c *cat) MakeSound() {
+	fmt.Println("Meow")
 }
 
-func (e *Employers) PrintEmployersInfo() {
-	fmt.Println(e.Id, e.Name)
-}
-
-func (e *Employers) Hash() string {
-	str := e.Name + strconv.Itoa(e.Id)
-	hash := sha256.New()
-	hash.Write([]byte(str))
-	hashBytes := hash.Sum(nil)
-	hashString := hex.EncodeToString(hashBytes)
-	return hashString
+func (c *dog) MakeSound() {
+	fmt.Println("Woof")
 }
 
 func main() {
-	e := Employers{
-		Name: "assa",
-		Id:   99,
-	}
-	e.PrintEmployersInfo()
-	hash := e.Hash()
-	fmt.Println(e, hash)
+	var c animal = &cat{}
+	var d animal = &dog{}
+
+	c.MakeSound()
+	d.MakeSound()
 }
