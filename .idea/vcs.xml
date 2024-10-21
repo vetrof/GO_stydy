@@ -2,6 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/book_go_donovan/gorutine2" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/go-contacts" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/server_frameless" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/url-shortener_my" vcs="Git" />
