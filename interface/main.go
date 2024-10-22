@@ -2,25 +2,36 @@ package main
 
 import "fmt"
 
-type animal interface {
-	MakeSound()
+// Interface
+type Shape interface {
+	area() float32
 }
 
-type cat struct{}
-type dog struct{}
-
-func (c *cat) MakeSound() {
-	fmt.Println("Meow")
+type Square struct {
+	sideLength float32
 }
 
-func (c *dog) MakeSound() {
-	fmt.Println("Woof")
+func (s Square) area() float32 {
+	return s.sideLength * s.sideLength
+}
+
+type Circle struct {
+	radius float32
+}
+
+func (c Circle) area() float32 {
+	return c.radius * c.radius
 }
 
 func main() {
-	var c animal = &cat{}
-	var d animal = &dog{}
+	square := Square{3}
+	circle := Circle{10}
 
-	c.MakeSound()
-	d.MakeSound()
+	PrintShapeArea(square)
+	PrintShapeArea(circle)
+
+}
+
+func PrintShapeArea(shape Shape) {
+	fmt.Println(shape.area())
 }
