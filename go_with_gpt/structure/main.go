@@ -5,27 +5,34 @@ import (
 	"strconv"
 )
 
+type User struct {
+	Name string
+	Age  int
+}
+
+func (u User) Greet() {
+	fmt.Printf("Привет, %s! Вам %d лет.\n", u.Name, u.Age)
+}
+
 func main() {
-	users := make(map[string]int)
+	users := make([]User, 0)
 
 	for {
 		name := getName()
-
 		if name == "stop" {
 			break
 		}
 
 		age := getAge()
 
-		users[name] = age
+		user := User{Name: name, Age: age}
 
+		users = append(users, user)
 	}
 
-	fmt.Printf("Введенные пары:")
-	for name, age := range users {
-		fmt.Printf("%s - %d  ", name, age)
+	for _, u := range users {
+		u.Greet()
 	}
-
 }
 
 func getName() string {
