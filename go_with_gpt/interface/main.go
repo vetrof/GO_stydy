@@ -2,6 +2,11 @@ package main
 
 import "fmt"
 
+type UserActions interface {
+	Greet()
+	ChangeAccess(access bool)
+}
+
 type Greeter interface {
 	Greet()
 }
