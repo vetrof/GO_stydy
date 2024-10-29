@@ -44,7 +44,7 @@ func (a *Admin) ChangeRole(role string) {
 func main() {
 	user := User{Name: "vasya", PassNum: 123}
 	admin := Admin{Name: "vasya", PassNum: 123, Role: "admin", Access: true}
-	greeters := []Greeter{user, admin}
+	greeters := []Greeter{user, admin} // TODO почему ошибка?
 
 	for _, greter := range greeters {
 		greter.Greet()
