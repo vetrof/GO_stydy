@@ -31,7 +31,7 @@ func (a Admin) Greet() {
 	fmt.Println("Hello", a.Name, "| you access ->", a.Access, "| you role ->", a.Role)
 }
 
-func (a Admin) ChangeAccess(access bool) {
+func (a *Admin) ChangeAccess(access bool) {
 	a.Access = access
 	fmt.Println("Access изменён:", a.Access)
 }
@@ -42,12 +42,18 @@ func (a *Admin) ChangeRole(role string) {
 }
 
 func main() {
-	user := User{Name: "vasya", PassNum: 123}
-	admin := Admin{Name: "vasya", PassNum: 123, Role: "admin", Access: true}
-	greeters := []Greeter{user, admin} // TODO почему ошибка?
+	// Создаём администратора
+	admin := Admin{Name: "Masha", PassNum: 456, Role: "admin", Access: true}
 
-	for _, greter := range greeters {
-		greter.Greet()
+	// Создаём срез только с администраторами, т.к. они реализуют интерфейс UserActions
+	greeters := []Greeter{&admin}
+
+	// Приветствуем всех
+	for _, greeter := range greeters {
+		greeter.Greet()
 	}
 
+	// Изменяем доступ и роль администратора
+	admin.ChangeAccess(false)
+	admin.ChangeRole("superadmin")
 }
